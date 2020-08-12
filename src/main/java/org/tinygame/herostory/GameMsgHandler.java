@@ -6,6 +6,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
@@ -56,6 +57,8 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
             user.heroAvator = herpAvator;
             _userMap.put(user.userId,user);
 
+            //将用户id附着到 channel
+            ctx.channel().attr(AttributeKey.valueOf("userId")).set(userId);
             //构建结果并且群发（广播）
             GameMsgProtocol.UserEntryResult newResult = resultBuilder.build();
             _channelGroup.writeAndFlush(newResult);
@@ -79,6 +82,23 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
             GameMsgProtocol.WhoElseIsHereResult newResult = resultBuilder.build();
             //谁用给谁发,不用用_channelGroup这个全局广播发了
             ctx.writeAndFlush(newResult);
+        }
+        // 相互看到人物移动
+        else if(msg instanceof GameMsgProtocol.UserMoveToCmd){
+            // 可以强转int 但是null无法强转 基础数值类型
+           Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+            if (null == userId){
+                return;
+            }
+            GameMsgProtocol.UserMoveToCmd cmd = (GameMsgProtocol.UserMoveToCmd) msg;
+            GameMsgProtocol.UserMoveToResult.Builder resultBuilder =
+                    GameMsgProtocol.UserMoveToResult.newBuilder();
+            resultBuilder.setMoveUserId(userId);
+            resultBuilder.setMoveToPosX(cmd.getMoveToPosX());
+            resultBuilder.setMoveToPosY(cmd.getMoveToPosY());
+            GameMsgProtocol.UserMoveToResult newReult = resultBuilder.build();
+            // 广播群发
+            _channelGroup.writeAndFlush(newReult);
         }
 //
 //        //websocket 二进制消息会通过 httpServerCodec 解码成binaryWebSocketFrame对象

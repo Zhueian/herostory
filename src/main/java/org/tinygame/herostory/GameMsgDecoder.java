@@ -41,7 +41,11 @@ public class GameMsgDecoder extends ChannelInboundHandlerAdapter{
                 break;
             //还有谁在场
             case GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_CMD_VALUE:
-                cmd = GameMsgProtocol.UserEntryCmd.parseFrom(msgBody);
+                cmd = GameMsgProtocol.WhoElseIsHereCmd.parseFrom(msgBody);
+                break;
+            // 多个客户端看到看到人物移动
+            case GameMsgProtocol.MsgCode.USER_MOVE_TO_CMD_VALUE:
+                cmd = GameMsgProtocol.UserMoveToCmd.parseFrom(msgBody);
                 break;
             default:;;
 
