@@ -63,9 +63,22 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
         }
         //还有谁在场
         else if(msg instanceof GameMsgProtocol.WhoElseIsHereCmd){
-            GameMsgProtocol.WhoElseIsHereCmd.Builder resultBuilder =
-                    GameMsgProtocol.WhoElseIsHereCmd.newBuilder();
+            GameMsgProtocol.WhoElseIsHereResult.Builder resultBuilder =
+                    GameMsgProtocol.WhoElseIsHereResult.newBuilder();
 
+            for(User currUser : _userMap.values()){
+                if (null == currUser){
+                    continue;
+                }
+                GameMsgProtocol.WhoElseIsHereResult.UserInfo.Builder userInfoBuilder =
+                        GameMsgProtocol.WhoElseIsHereResult.UserInfo.newBuilder();
+                userInfoBuilder.setUserId(currUser.userId);
+                userInfoBuilder.setHeroAvatar(currUser.heroAvator);
+                resultBuilder.addUserInfo(userInfoBuilder);
+            }
+            GameMsgProtocol.WhoElseIsHereResult newResult = resultBuilder.build();
+            //谁用给谁发,不用用_channelGroup这个全局广播发了
+            ctx.writeAndFlush(newResult);
         }
 //
 //        //websocket 二进制消息会通过 httpServerCodec 解码成binaryWebSocketFrame对象
