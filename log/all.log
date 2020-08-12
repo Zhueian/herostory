@@ -1,1 +1,6 @@
 [17:05:53,811] [INFO] ServerMain.main --> 服务器启动成功
+[17:49:34,661] [INFO] ServerMain.main --> 服务器启动成功
+[17:55:23,679] [INFO] ServerMain.main --> 服务器启动成功
+[17:56:34,498] [ERROR] GameMsgEncoder.write --> 无法识别的消息类型，msgClazz=
+[17:56:34,498] [ERROR] GameMsgEncoder.write --> 无法识别的消息类型，msgClazz=
+[17:57:12,606] [INFO] ServerMain.main --> 服务器启动成功

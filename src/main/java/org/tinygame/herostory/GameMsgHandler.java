@@ -36,6 +36,22 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
         _channelGroup.add(ctx.channel());
     }
 
+    // 用户离场或者刷新客户端，清除记录
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx)throws Exception{
+        super.handlerRemoved(ctx);
+        _channelGroup.remove(ctx.channel());
+        Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+        if (null == userId){
+            return;
+        }
+        _userMap.remove(userId);
+        GameMsgProtocol.UserQuitResult.Builder builder = GameMsgProtocol.UserQuitResult.newBuilder();
+        builder.setQuitUserId(userId);
+        GameMsgProtocol.UserQuitResult res = builder.build();
+        _channelGroup.writeAndFlush(res);
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("收到客户端消息  "+msg);
