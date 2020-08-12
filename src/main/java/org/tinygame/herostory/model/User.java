@@ -1,4 +1,4 @@
-package org.tinygame.herostory;
+package org.tinygame.herostory.model;
 
 /**
  * Created by qiucy on 2020/8/11.
