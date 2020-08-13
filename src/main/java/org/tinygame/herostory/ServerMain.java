@@ -12,6 +12,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tinygame.herostory.cmdHandler.CmdHandlerFactory;
 
 /**
  * Created by qiucy on 2020/6/8.
@@ -23,6 +24,7 @@ public class ServerMain {
      * @param argArray
      */
     static public void main(String[] argArray) {
+        CmdHandlerFactory.init();
         // TODO pipeline：管道
         // 故事中的美女
         EventLoopGroup bossGroup = new NioEventLoopGroup();

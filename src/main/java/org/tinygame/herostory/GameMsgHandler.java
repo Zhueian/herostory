@@ -4,11 +4,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
-import org.tinygame.herostory.cmdHandler.ICmdHandler;
-import org.tinygame.herostory.cmdHandler.UserEntryCmdHandler;
-import org.tinygame.herostory.cmdHandler.UserMoveToCmdHandler;
-import org.tinygame.herostory.cmdHandler.WhoElseIsHereCmdHandler;
-import org.tinygame.herostory.model.User;
+import org.tinygame.herostory.cmdHandler.*;
 import org.tinygame.herostory.model.UserManager;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
@@ -19,6 +15,11 @@ import org.tinygame.herostory.msg.GameMsgProtocol;
 public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
 
 
+    /**
+     * 客户端链接连上，加入信道
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
@@ -46,26 +47,7 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("收到客户端消息,myClazz =   " + msg.getClass().getName()+" , msg = "+msg);
-
-        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = null;
-
-
-        //入场
-        if (msg instanceof GameMsgProtocol.UserEntryCmd) {
-//            handle(ctx, (GameMsgProtocol.UserEntryCmd) msg);
-            cmdHandler = new UserEntryCmdHandler();
-        }
-        //还有谁在场
-        else if (msg instanceof GameMsgProtocol.WhoElseIsHereCmd) {
-//            handle(ctx);
-            cmdHandler = new WhoElseIsHereCmdHandler();
-        }
-        // 相互看到人物移动
-        else if (msg instanceof GameMsgProtocol.UserMoveToCmd) {
-//            handler(ctx, (GameMsgProtocol.UserMoveToCmd) msg);
-            cmdHandler = new UserMoveToCmdHandler();
-        }
-
+        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msg.getClass());
         if (null != cmdHandler){
             cmdHandler.handle(ctx,cast(msg));
         }
@@ -78,9 +60,10 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
      * @return
      */
     static private <TCmd extends GeneratedMessageV3> TCmd cast(Object msg){
-        if (null == msg) return null;
-        else{
-            return (TCmd)msg;
+        if (null == msg) {
+            return null;
+        }else{
+            return (TCmd) msg;
         }
     }
 
