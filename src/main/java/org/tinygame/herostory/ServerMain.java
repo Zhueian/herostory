@@ -25,6 +25,7 @@ public class ServerMain {
      */
     static public void main(String[] argArray) {
         CmdHandlerFactory.init();
+        GameMsgRecognizer.init();
         // TODO pipeline：管道
         // 故事中的美女
         EventLoopGroup bossGroup = new NioEventLoopGroup();
