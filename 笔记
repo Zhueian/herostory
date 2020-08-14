@@ -4,3 +4,14 @@
 3. 接口取名 I 开头 ，有点c#的编程风格
 4. 要基于需求学技术，光理论没场景式学不会的，脱离实际场景，就好比说：人生听的很多大道理，但还是过不好这一生。
 5. final class 的好处，不能继承了，继承耦合最高，类与类之间谁也不关联谁最好，改a类不用考虑b类。多米了法则
+6。 记录一个bug：Error:(52, 39) java: 不兼容的类型: 不存在类型变量TCmd的实例,
+        以使TCmd与capture#1, 共 ? extends com.google.protobuf.GeneratedMessageV3一致
+
+    解决方案：
+    是Eclipse编译代码使用的是Eclipse自带的JDT（Java Development Tools）
+           而IDEA 这里默认使用的是JAVA_HONE中的javac
+           javac相对JDT的检查机制来说，更加的严格，
+           所以Eclipse可以编译通过，而IDEA用Maven编译会报错。
+           我们的idea编译默认是Javac。
+           所以将idea的编译从javac变为Eclipse就行
+
