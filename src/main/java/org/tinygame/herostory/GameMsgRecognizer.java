@@ -48,7 +48,7 @@ public class GameMsgRecognizer {
     static public int getMsgCodeByMsgClazz(Class<?> msgClazz){
         if(null == msgClazz) return -1;
         Integer msgCode = _msgClazzAndMsgCodeMap.get(msgClazz);
-        if (null != msgClazz) return msgCode.intValue();
+        if (null != msgCode) return msgCode.intValue();
         return -1;
     }
 }

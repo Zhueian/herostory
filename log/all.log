@@ -1,2 +1,2 @@
-[14:39:58,912] [INFO] ServerMain.main --> 服务器启动成功
-[22:02:17,010] [INFO] ServerMain.main --> 服务器启动成功
+[10:01:09,813] [INFO] ServerMain.main --> 服务器启动成功
+[10:02:14,131] [ERROR] GameMsgDecoder.channelRead --> 无法识别的消息，msgCode = 9
