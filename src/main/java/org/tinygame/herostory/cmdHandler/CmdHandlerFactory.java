@@ -23,6 +23,7 @@ public final class CmdHandlerFactory {
      */
     static private Map<Class<?>,ICmdHandler<? extends GeneratedMessageV3 >> _handlerMap = new HashMap<>();
 
+    //这个反射 只在init 用了一次，性能可以忽略
     static public void init(){
         Set<Class<?>> clazzSet = PackageUtil.listSubClazz(
                 CmdHandlerFactory.class.getPackage().getName(),
