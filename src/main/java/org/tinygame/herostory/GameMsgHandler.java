@@ -1,6 +1,7 @@
 package org.tinygame.herostory;
 
 import com.google.protobuf.GeneratedMessageV3;
+import com.sun.tools.javac.util.Assert;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
@@ -46,6 +47,9 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        // 防御式编程
+        Assert.checkNonNull(ctx,"ctx 为空");
+        Assert.checkNonNull(msg,"msg 为空");
         System.out.println("收到客户端消息,myClazz =   " + msg.getClass().getName()+" , msg = "+msg);
         ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msg.getClass());
         if (null != cmdHandler){

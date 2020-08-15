@@ -2,6 +2,7 @@ package org.tinygame.herostory;
 
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Message;
+import com.sun.tools.javac.util.Assert;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -18,6 +19,9 @@ public class GameMsgDecoder extends ChannelInboundHandlerAdapter{
     static private Logger LOGGER = LoggerFactory.getLogger(GameMsgDecoder.class);
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        // 防御式编程
+        Assert.checkNonNull(ctx,"ctx 为空");
+        Assert.checkNonNull(msg,"msg 为空");
         if (!(msg instanceof BinaryWebSocketFrame)){
             return;
         }
