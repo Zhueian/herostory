@@ -26,9 +26,9 @@ public final class PackageUtil {
      * @return 子类集合
      */
     static public Set<Class<?>> listSubClazz(
-            String packageName,
-            boolean recursive,
-            Class<?> superClazz) {
+        String packageName,
+        boolean recursive,
+        Class<?> superClazz) {
         if (superClazz == null) {
             return Collections.emptySet();
         } else {
@@ -45,10 +45,10 @@ public final class PackageUtil {
      * @return 符合条件的类集合
      */
     static public Set<Class<?>> listClazz(
-            String packageName, boolean recursive, IClazzFilter filter) {
+        String packageName, boolean recursive, IClazzFilter filter) {
 
         if (packageName == null ||
-                packageName.isEmpty()) {
+            packageName.isEmpty()) {
             return null;
         }
 
@@ -75,7 +75,7 @@ public final class PackageUtil {
                 if ("FILE".equalsIgnoreCase(protocol)) {
                     // 从文件系统中加载类
                     tmpSet = listClazzFromDir(
-                            new File(currUrl.getFile()), packageName, recursive, filter
+                        new File(currUrl.getFile()), packageName, recursive, filter
                     );
                 } else if ("JAR".equalsIgnoreCase(protocol)) {
                     // 获取文件字符串
@@ -95,7 +95,7 @@ public final class PackageUtil {
 
                     // 从 JAR 文件中加载类
                     tmpSet = listClazzFromJar(
-                            new File(fileStr), packageName, recursive, filter
+                        new File(fileStr), packageName, recursive, filter
                     );
                 }
 
@@ -123,10 +123,10 @@ public final class PackageUtil {
      * @return 符合条件的类集合
      */
     static private Set<Class<?>> listClazzFromDir(
-            final File dirFile, final String packageName, final boolean recursive, IClazzFilter filter) {
+        final File dirFile, final String packageName, final boolean recursive, IClazzFilter filter) {
 
         if (!dirFile.exists() ||
-                !dirFile.isDirectory()) {
+            !dirFile.isDirectory()) {
             // 如果参数对象为空,
             // 则直接退出!
             return null;
@@ -136,7 +136,7 @@ public final class PackageUtil {
         File[] subFileArr = dirFile.listFiles();
 
         if (subFileArr == null ||
-                subFileArr.length <= 0) {
+            subFileArr.length <= 0) {
             return null;
         }
 
@@ -151,14 +151,14 @@ public final class PackageUtil {
             File currFile = fileQ.poll();
 
             if (currFile.isDirectory() &&
-                    recursive) {
+                recursive) {
                 // 如果当前文件是目录,
                 // 并且是执行递归操作时,
                 // 获取子文件列表
                 subFileArr = currFile.listFiles();
 
                 if (subFileArr != null &&
-                        subFileArr.length > 0) {
+                    subFileArr.length > 0) {
                     // 添加文件到队列
                     fileQ.addAll(Arrays.asList(subFileArr));
                 }
@@ -166,7 +166,7 @@ public final class PackageUtil {
             }
 
             if (!currFile.isFile() ||
-                    !currFile.getName().endsWith(".class")) {
+                !currFile.getName().endsWith(".class")) {
                 // 如果当前文件不是文件,
                 // 或者文件名不是以 .class 结尾,
                 // 则直接跳过
@@ -194,7 +194,7 @@ public final class PackageUtil {
                 Class<?> clazzObj = Class.forName(clazzName);
 
                 if (null != filter &&
-                        !filter.accept(clazzObj)) {
+                    !filter.accept(clazzObj)) {
                     // 如果过滤器不为空,
                     // 且过滤器不接受当前类,
                     // 则直接跳过!
@@ -221,10 +221,10 @@ public final class PackageUtil {
      * @return 符合条件的类集合
      */
     static private Set<Class<?>> listClazzFromJar(
-            final File jarFilePath, final String packageName, final boolean recursive, IClazzFilter filter) {
+        final File jarFilePath, final String packageName, final boolean recursive, IClazzFilter filter) {
 
         if (jarFilePath == null ||
-                jarFilePath.isDirectory()) {
+            jarFilePath.isDirectory()) {
             // 如果参数对象为空,
             // 则直接退出!
             return null;
@@ -281,7 +281,7 @@ public final class PackageUtil {
                 Class<?> clazzObj = Class.forName(clazzName);
 
                 if (null != filter &&
-                        !filter.accept(clazzObj)) {
+                    !filter.accept(clazzObj)) {
                     // 如果过滤器不为空,
                     // 且过滤器不接受当前类,
                     // 则直接跳过!
@@ -327,7 +327,7 @@ public final class PackageUtil {
      */
     static private String join(String[] strArr, String conn) {
         if (null == strArr ||
-                strArr.length <= 0) {
+            strArr.length <= 0) {
             return "";
         }
 
@@ -355,12 +355,12 @@ public final class PackageUtil {
      */
     static private String trimLeft(String src, String trimStr) {
         if (null == src ||
-                src.isEmpty()) {
+            src.isEmpty()) {
             return "";
         }
 
         if (null == trimStr ||
-                trimStr.isEmpty()) {
+            trimStr.isEmpty()) {
             return src;
         }
 
@@ -375,4 +375,3 @@ public final class PackageUtil {
         return src;
     }
 }
-
