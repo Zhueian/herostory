@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,27 +29,57 @@ public class GameMsgRecognizer {
     static private final Map<Class<?>,Integer> _msgClazzAndMsgCodeMap = new HashMap<>();
 
     static public void init(){
-        _msgCodeAndMsgBodyMap.put(GameMsgProtocol.MsgCode.USER_ENTRY_CMD_VALUE,GameMsgProtocol.UserEntryCmd.getDefaultInstance());
-        _msgCodeAndMsgBodyMap.put(GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_CMD_VALUE,GameMsgProtocol.WhoElseIsHereCmd.getDefaultInstance());
-        _msgCodeAndMsgBodyMap.put(GameMsgProtocol.MsgCode.USER_MOVE_TO_CMD_VALUE,GameMsgProtocol.UserMoveToCmd.getDefaultInstance());
+        // 获取所有内部类，子类
+        Class<?>[] declaredClasses = GameMsgProtocol.class.getDeclaredClasses();
+        //TODO stream改造
+        for (Class<?> innerClazz : declaredClasses) {
+            if (!GeneratedMessageV3.class.isAssignableFrom(innerClazz)){
+                continue;
+            }
+            String clazzName = innerClazz.getSimpleName();
+            clazzName = clazzName.toLowerCase();
+            System.out.println("clazzName.toLowerCase = "+clazzName);
+            for (GameMsgProtocol.MsgCode msgCode : GameMsgProtocol.MsgCode.values()) {
+                String strMsgCode = msgCode.name();
+                strMsgCode = strMsgCode.replaceAll("_","");
+                strMsgCode = strMsgCode.toLowerCase();
+                // 防御式编程
+                if (!strMsgCode.startsWith(clazzName)){
+                    continue;
+                }
+                try{
+                    // getDefaultInstance静态方法 入参自己
+                    Object retrunObj = innerClazz.getDeclaredMethod("getDefaultInstance").invoke(innerClazz);
+                    LOGGER.info("{} <==> {}",innerClazz.getName(),msgCode.getNumber());
+                    _msgCodeAndMsgBodyMap.put(msgCode.getNumber(), (GeneratedMessageV3) retrunObj);
+                    _msgClazzAndMsgCodeMap.put(innerClazz,msgCode.getNumber());
 
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserEntryResult.class,GameMsgProtocol.MsgCode.USER_ENTRY_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.WhoElseIsHereResult.class,GameMsgProtocol.MsgCode.WHO_ELSE_IS_HERE_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserMoveToResult.class,GameMsgProtocol.MsgCode.USER_MOVE_TO_RESULT_VALUE);
-        _msgClazzAndMsgCodeMap.put(GameMsgProtocol.UserQuitResult.class,GameMsgProtocol.MsgCode.USER_QUIT_RESULT_VALUE);
+                }catch (Exception e){
+                    LOGGER.error(e.getMessage(),e);
+                }
+            }
+        }
     }
 
     static public Message.Builder getBuilderByMsgCode(int msgCode){
-        if (msgCode < 0) return null;
+        if (msgCode < 0) {
+            return null;
+        }
         GeneratedMessageV3 msg = _msgCodeAndMsgBodyMap.get(msgCode);
-        if (null == msg) return null;
+        if (null == msg) {
+            return null;
+        }
         return msg.newBuilderForType();
     }
 
     static public int getMsgCodeByMsgClazz(Class<?> msgClazz){
-        if(null == msgClazz) return -1;
+        if(null == msgClazz) {
+            return -1;
+        }
         Integer msgCode = _msgClazzAndMsgCodeMap.get(msgClazz);
-        if (null != msgCode) return msgCode.intValue();
+        if (null != msgCode) {
+            return msgCode.intValue();
+        }
         return -1;
     }
 }
