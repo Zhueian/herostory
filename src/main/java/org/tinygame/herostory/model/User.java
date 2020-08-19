@@ -7,4 +7,5 @@ package org.tinygame.herostory.model;
 public class User {
     public int userId;
     public String heroAvator;
+    public final MoveState moveState = new MoveState();
 }

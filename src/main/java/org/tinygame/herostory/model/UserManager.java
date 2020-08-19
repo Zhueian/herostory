@@ -39,4 +39,8 @@ public final class UserManager {
     static public Collection<User> listUser(){
         return _userMap.values();
     }
+
+    public static User getUserById(int userId) {
+        return _userMap.get(userId);
+    }
 }

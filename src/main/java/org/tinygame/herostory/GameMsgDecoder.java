@@ -1,6 +1,5 @@
 package org.tinygame.herostory;
 
-import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Message;
 import com.sun.tools.javac.util.Assert;
 import io.netty.buffer.ByteBuf;
@@ -9,7 +8,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tinygame.herostory.msg.GameMsgProtocol;
 
 /**
  * Created by qiucy on 2020/8/11.
